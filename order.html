@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Trà Sữa</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            padding: 20px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin: 5px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        button {
+            background: green;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🍹 Order Trà Sữa</h2>
+
+    <input id="ban" type="number" placeholder="Số bàn"><br>
+
+    <select id="mon">
+        <option value="">-- Đang tải menu... --</option>
+    </select><br>
+
+    <input id="sl" type="number" placeholder="Số lượng"><br>
+
+    <button onclick="datMon()">Đặt món</button>
+
+    <script>
+        // 🔥 API LAN của bạn
+        const apiURL = "http://192.168.1.7:7042/api/menu";
+
+        // Load menu
+        fetch(apiURL)
+            .then(res => res.json())
+            .then(data => {
+                const select = document.getElementById("mon");
+                select.innerHTML = '<option value="">-- Chọn món --</option>';
+
+                data.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.tensanpham;
+                    option.text = item.tensanpham + " - " + item.dongia + "đ";
+                    select.appendChild(option);
+                });
+            })
+            .catch(err => {
+                alert("❌ Không load được menu!");
+                console.log(err);
+            });
+
+        // Đặt món
+        function datMon() {
+            let ban = document.getElementById("ban").value;
+            let mon = document.getElementById("mon").value;
+            let sl = document.getElementById("sl").value;
+
+            if (!ban || !mon || !sl) {
+                alert("⚠️ Nhập đầy đủ thông tin!");
+                return;
+            }
+
+            alert(`✅ Đặt thành công!\nBàn: ${ban}\nMón: ${mon}\nSL: ${sl}`);
+        }
+    </script>
+
+</body>
+</html>
